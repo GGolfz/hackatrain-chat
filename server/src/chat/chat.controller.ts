@@ -1,7 +1,8 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Header, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
-import { existsSync, mkdir, mkdirSync, renameSync } from "fs";
+import { Response } from "express";
+import { createReadStream, existsSync, mkdir, mkdirSync, renameSync } from "fs";
 import { uploadPath } from "src/config/file.config";
 import { User } from "src/decorator/user.decorator";
 import { JwtAuthGuard } from "src/user/jwt-auth.guard";
@@ -44,13 +45,13 @@ export class ChatController {
     @Post(':roomId/image')
     async sendImage(@User() userId: string, @Body() body: ImageDto, @Param('roomId') roomId: string, @UploadedFile() image: Express.Multer.File) {
         const message = await this.chatService.saveMessage(userId, roomId, '', 'image')
-        const filepath = `${uploadPath}/images/${roomId}/${message.id}.${image.mimetype.split('/')[1]
-            }`;
+        const fileExt = image.mimetype.split('/')[1].split('+')[0];
+        const filepath = `${uploadPath}/images/${roomId}/${message.id}.${fileExt}`;
         if (!existsSync(`${uploadPath}/images/${roomId}`)) {
             mkdirSync(`${uploadPath}/images/${roomId}`)
         }
         renameSync(image.path, filepath);
-        const data = await this.chatService.updateMesssageImagePath(message.id, filepath);
+        const data = await this.chatService.updateMesssageImagePath(message.id, filepath.split(`${uploadPath}/images/`)[1]);
         const user = await this.userService.findById(data.user_id);
 
         return {
@@ -61,6 +62,14 @@ export class ChatController {
             type: data.type,
             timestamp: data.created_at
         }
+    }
+
+    @Get('image/:roomId/:fileName')
+    @Header('Content-Type', '')
+    async getImage(@Res() response: Response, @Param('roomId') roomId: string, @Param('fileName') fileName: string) {
+        // console.log(fileName)
+        const pipe = createReadStream(`${uploadPath}/images/${roomId}/${fileName}`);
+        pipe.pipe(response)
     }
 
     @ApiBearerAuth()

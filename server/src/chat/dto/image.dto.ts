@@ -1,9 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNotEmpty } from "class-validator";
 
 export class ImageDto {
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+    @ApiProperty({type: 'string', format: 'binary'})
+    image: string;
 }

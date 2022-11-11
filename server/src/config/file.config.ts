@@ -1,3 +1,3 @@
-const uploadPath = ''
+const uploadPath = 'uploads'
 
 export { uploadPath }

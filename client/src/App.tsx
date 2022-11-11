@@ -7,9 +7,8 @@ import MessageData from "./type/MessageData";
 import Room from "./type/Room";
 import UserData from "./type/UserData";
 import axios from "axios";
-import ReactModal from "react-modal";
 import CreateRoomModal from "./components/CreateRoomModal";
-import { Button, IconButton, TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import Icon from "@mui/material/Icon";
 import ChatRoom from "./components/ChatRoom";
 
@@ -56,7 +55,9 @@ function App() {
   useEffect(() => {
     if (currentRoom == null) {
       if (roomList.length > 0) {
-        setCurrentRoom(roomList[0]);
+        if (window.screen.width > 1000) {
+          setCurrentRoom(roomList[0]);
+        }
       }
     }
   }, [roomList]);
@@ -180,6 +181,25 @@ function App() {
     setCurrentRoom(room);
   };
 
+  const shouldRenderLeftPanel = () => {
+    if (currentRoom != null) {
+      if (window.screen.width < 1000) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const shouldRenderRightPanel = () => {
+    if (currentRoom != null) {
+      return true;
+    } else {
+      if(window.screen.width < 1000) {
+        return false;
+      }
+    }
+  };
+
   return (
     <div className="App">
       {user ? (
@@ -191,51 +211,57 @@ function App() {
               callback={handleCreateRoom}
             />
           ) : null}
-          <div className="leftPanel">
-            <div className="userDetail">
-              <div className="userAvatar"></div>
-              <div>{user.name}</div>
-              <div className="searchContainer">
-                <TextField
-                  fullWidth
-                  placeholder="Search"
-                  value={searchVal}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                ></TextField>
-                <IconButton onClick={() => setShowModal(true)}>
-                  <Icon>add</Icon>
-                </IconButton>
+          {shouldRenderLeftPanel() ? (
+            <div className="leftPanel">
+              <div className="userDetail">
+                <div className="userAvatar"></div>
+                <div>{user.name}</div>
+                <div className="searchContainer">
+                  <TextField
+                    fullWidth
+                    placeholder="Search"
+                    value={searchVal}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                  ></TextField>
+                  <IconButton onClick={() => setShowModal(true)}>
+                    <Icon>add</Icon>
+                  </IconButton>
+                </div>
+              </div>
+              <div className="roomList">
+                <div className="roomListTitle">Chats</div>
+                <div className="roomListScroll">
+                  {roomList
+                    .filter((room) =>
+                      room.name.toLowerCase().includes(searchVal.toLowerCase())
+                    )
+                    .map((room) => (
+                      <RoomTile
+                        room={room}
+                        currentRoom={currentRoom}
+                        handleChangeRoom={() => handleChangeRoom(room)}
+                      />
+                    ))}
+                </div>
               </div>
             </div>
-            <div className="roomList">
-              <div className="roomListTitle">Chats</div>
-              <div className="roomListScroll">
-                {roomList
-                  .filter((room) =>
-                    room.name.toLowerCase().includes(searchVal.toLowerCase())
-                  )
-                  .map((room) => (
-                    <RoomTile
-                      room={room}
-                      currentRoom={currentRoom}
-                      handleChangeRoom={() => handleChangeRoom(room)}
-                    />
-                  ))}
-              </div>
+          ) : null}
+
+          {shouldRenderRightPanel() ? (
+            <div className="rightPanel">
+              {currentRoom ? (
+                <ChatRoom
+                  setCurrentRoom={setCurrentRoom}
+                  messageList={messageList}
+                  userId={user.id}
+                  room={currentRoom}
+                  callback={handleSendMessage}
+                />
+              ) : null}
             </div>
-          </div>
-          <div className="rightPanel">
-            {currentRoom ? (
-              <ChatRoom
-                messageList={messageList}
-                userId={user.id}
-                roomId={currentRoom.id}
-                callback={handleSendMessage}
-              />
-            ) : null}
-          </div>
+          ) : null}
         </Fragment>
       ) : (
         <LoginScreen handleLogin={handleLogin} />

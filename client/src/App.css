@@ -58,3 +58,12 @@
   flex: 1;
   overflow: scroll;
 }
+
+@media screen and (max-width: 1000px) {
+  .leftPanel {
+    width: 100vw;
+  }
+  .rightPanel {
+    width: 100vw;
+  }
+}

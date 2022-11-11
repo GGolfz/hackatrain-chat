@@ -1,0 +1,11 @@
+.MessageList {
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+
+.MessageField {
+    display: flex;
+    gap: .5rem;
+    padding: 0 .25rem;
+}

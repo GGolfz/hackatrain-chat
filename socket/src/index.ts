@@ -25,14 +25,16 @@ io.on('connection', socket => {
         console.log(`${userId} join ${roomId}`)
         socket.join(roomId);
     });
+    socket.on('leaveRoom', (data: JoinRoomData) => {
+        const { roomId, userId } = data
+        console.log(`${userId} leave ${roomId}`)
+        socket.leave(roomId);
+    })
 
     socket.on('chatMessage', (data: MessageData) => {
-        const { roomId,
-            senderId,
-            sender,
-            message,
-            timestamp } = data
-        io.to(roomId).emit('message', { roomId, senderId, sender, message, timestamp });
+        const { roomId } = data
+        console.log('message sent to', roomId)
+        io.to(roomId).emit('message', data);
     });
 
     socket.on('roomCreated', (data: RoomCreateData) => {

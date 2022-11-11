@@ -9,7 +9,8 @@ interface MessageData {
     roomId: string;
     senderId: string;
     sender: string;
-    message: string;
+    data: string;
+    type: string;
     timestamp: string;
 }
 interface ServerToClientEvents {
@@ -19,6 +20,7 @@ interface ServerToClientEvents {
 
 interface ClientToServerEvents {
     joinRoom: (data: JoinRoomData) => void;
+    leaveRoom: (data: JoinRoomData) => void;
     chatMessage: (data: MessageData) => void;
     roomCreated: (data: RoomCreateData) => void;
 }

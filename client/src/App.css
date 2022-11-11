@@ -9,13 +9,16 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - 2rem);
-  width: 400px;
+  width: 350px;
   border-right: 1px solid #ccc;
   padding: 1rem 2rem;
   overflow: hidden;
 }
 .rightPanel {
-
+  display: flex;
+  flex-direction: column;
+  width: calc(100vw - 400px);
+  height: 100vh;
 }
 .userAvatar {
   width: 80px;

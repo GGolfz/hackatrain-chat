@@ -11,6 +11,7 @@ import ReactModal from "react-modal";
 import CreateRoomModal from "./components/CreateRoomModal";
 import { Button, IconButton, TextField } from "@mui/material";
 import Icon from "@mui/material/Icon";
+import ChatRoom from "./components/ChatRoom";
 
 let socket: Socket;
 function App() {
@@ -20,11 +21,20 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [searchVal, setSearch] = useState("");
 
+  const [messageList, setMessageList] = useState<Array<MessageData>>([]);
+
   useEffect(() => {
     socket = socketIOClient("http://localhost:5050");
     socket.on("roomCreated", (member) => {
-      handleRoomCreatedNotified(member.member)
+      handleRoomCreatedNotified(member.member);
     });
+    socket.on("message", (message) => {
+      handleReceiveMessage(message);
+    });
+    return () => {
+      socket.off("roomCreated");
+      socket.off("message");
+    };
   }, []);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -47,6 +57,27 @@ function App() {
     }
   }, [roomList]);
 
+  useEffect(() => {
+    if (currentRoom) {
+      if (socket) {
+        socket.emit("joinRoom", {
+          roomId: currentRoom.id,
+          userId: user?.id,
+        });
+      }
+      fetchMessageList(currentRoom.id);
+    }
+  }, [currentRoom]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.off("message");
+      socket.on("message", (message) => {
+        handleReceiveMessage(message);
+      });
+    }
+  }, [messageList]);
+
   const handleRoomCreatedNotified = (member: Array<string>) => {
     if (user) {
       const userId = user.id;
@@ -64,6 +95,32 @@ function App() {
     }
     fetchRoomList();
     setShowModal(false);
+  };
+
+  const handleReceiveMessage = (message: MessageData) => {
+    if (message.senderId != user?.id) {
+      setMessageList([...messageList, message]);
+    }
+  };
+
+  const handleSendMessage = (message: MessageData) => {
+    if (socket) {
+      setMessageList([...messageList, message]);
+      socket.emit("chatMessage", message);
+    }
+  };
+
+  const fetchMessageList = (id: string) => {
+    const token = localStorage.getItem("token");
+    axios
+      .get(`http://localhost:3000/api/chat/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setMessageList(res.data);
+      });
   };
 
   const fetchRoomList = () => {
@@ -109,6 +166,16 @@ function App() {
       });
   };
 
+  const handleChangeRoom = (room: Room) => {
+    if (socket) {
+      socket.emit("leaveRoom", {
+        roomId: currentRoom?.id,
+        userId: user?.id,
+      });
+    }
+    setCurrentRoom(room);
+  };
+
   return (
     <div className="App">
       {user ? (
@@ -149,16 +216,20 @@ function App() {
                     <RoomTile
                       room={room}
                       currentRoom={currentRoom}
-                      handleChangeRoom={() => setCurrentRoom(room)}
+                      handleChangeRoom={() => handleChangeRoom(room)}
                     />
                   ))}
               </div>
             </div>
           </div>
           <div className="rightPanel">
-            {/* {msgList.map((msg) => (
-              <div>{msg.data}</div>
-            ))} */}
+            {currentRoom ? (
+              <ChatRoom
+                messageList={messageList}
+                roomId={currentRoom.id}
+                callback={handleSendMessage}
+              />
+            ) : null}
           </div>
         </Fragment>
       ) : (

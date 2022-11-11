@@ -15,7 +15,7 @@ export class UserController {
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     async getUserList(@User() userId: string): Promise<any> {
-        return this.userService.getUserList();
+        return this.userService.getUserList(userId);
     }
     @Get('')
     @ApiBearerAuth()

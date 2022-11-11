@@ -5,13 +5,13 @@
     align-items: center;
     margin-bottom: .5rem;
     padding: 1rem 1rem;
-    border-bottom: 1px solid #ccc;
 }
 
 .RoomAvatar {
     width: 48px; 
     height: 48px;
     border-radius: 50%;
+    background: #FB9CCB;
 }
 .RoomDetail {
     display: flex;

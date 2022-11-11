@@ -32,8 +32,14 @@ export class UserService {
         return data;
     }
 
-    async getUserList() {
-        const data = await this.prisma.user.findMany();
+    async getUserList(userId: string) {
+        const data = await this.prisma.user.findMany({
+            where: {
+                NOT: {
+                    id: userId
+                }
+            }
+        });
         return data;
     }
 }

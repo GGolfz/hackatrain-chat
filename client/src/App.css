@@ -5,15 +5,53 @@
   height: 100vh;
 }
 
-.roomList {
-  height: 100vh;
-  width: 400px;
+.leftPanel {
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 2rem);
+  width: 400px;
   border-right: 1px solid #ccc;
+  padding: 1rem 2rem;
+  overflow: hidden;
+}
+.rightPanel {
+
+}
+.userAvatar {
+  width: 80px;
+  height: 80px;
+  background: #FB9CCB;
+  border-radius: 40px;
+}
+.userDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+  gap: .5rem;
+  font-size: 1.25rem;
+  height: 30vh;
+}
+.searchContainer {
+  margin-top: .5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+.roomList {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 70vh;
 }
 .roomListTitle {
-  font-size: 2rem;
-  padding: 2rem 1rem;
+  font-size: 1rem;
+  padding: .5rem 0;
   border-bottom: 1px solid #ccc;
+}
+.roomListScroll {
+  flex: 1;
+  overflow: scroll;
 }

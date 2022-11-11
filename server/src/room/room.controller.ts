@@ -21,8 +21,7 @@ export class RoomController {
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     async getRoomList(@User() userId: string): Promise<any> {
-        const roomList = await this.getRoomList(userId);
-
+        const roomList = await this.roomService.getRoomList(userId);
         return roomList
     }
 }

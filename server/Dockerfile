@@ -8,6 +8,7 @@ RUN yarn
 
 RUN mkdir ./prisma
 
+RUN mkdir ./uploads
 RUN mkdir ./uploads/images
 
 COPY ./prisma/schema.prisma ./prisma/

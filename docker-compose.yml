@@ -1,0 +1,47 @@
+version: '3'
+services:
+  postgres:
+    image: hackatrain_db
+    build:
+      context: db
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_PASSWORD=notreallysimplepassword
+    networks:
+      - hackatrain-network
+  client:
+    image: hackatrain_client
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - hackatrain-network
+    environment:
+      - API_ENDPOINT=http://localhost:3000
+      - SOCKET_ENDPOINT=http://localhost:5050
+  server:
+    image: hackatrain_server
+    build:
+      context: server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - hackatrain-network
+    environment:
+      - DB_URL=postgresql://postgres:notreallysimplepassword@localhost:5432/postgres
+      - JWT_SECRET=thehardestsecret
+  socket:
+    image: hackatrain_socket
+    build:
+      context: socket
+      dockerfile: Dockerfile
+    ports:
+      - "5050:5050"
+    networks:
+      - hackatrain-network
+networks:
+  hackatrain-network:
+  

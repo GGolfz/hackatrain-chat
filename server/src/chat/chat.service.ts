@@ -4,7 +4,16 @@ import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class ChatService {
-    constructor(private prismaService: PrismaService, private userService: UserService) { }
+    constructor(private prismaService: PrismaService) { }
+    async updateMesssageImagePath(message_id: string, path: string) {
+        return await this.prismaService.message.update({
+            data: {
+                data: path
+            }, where: {
+                id: message_id,
+            }
+        });
+    }
     async saveMessage(user_id: string, room_id: string, data: string, type: string) {
         const message = await this.prismaService.message.create({
             data: {
@@ -14,16 +23,7 @@ export class ChatService {
                 type,
             }
         })
-        const user = await this.userService.findById(message.user_id);
-
-        return {
-            roomId: message.room_id,
-            senderId: user.id,
-            sender: user.name,
-            data: message.data,
-            type: message.type,
-            timestamp: message.created_at
-        }
+        return message;
     }
     async isUserInRoom(user_id: string, room_id: string) {
         const data = await this.prismaService.user_room.findFirst({

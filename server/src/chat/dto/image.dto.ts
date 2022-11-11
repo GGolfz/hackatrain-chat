@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNotEmpty, IsArray } from "class-validator";
+import { IsString, IsNotEmpty } from "class-validator";
 
-export class FileDto {
+export class ImageDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()

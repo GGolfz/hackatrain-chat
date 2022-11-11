@@ -25,7 +25,7 @@ const MessageBubble = ({ userId, message }: Props) => {
         <div>{message.sender}</div>
         <div className={styles.OtherMessageBubble}>
           {message.type == "image" ? (
-            <img src={message.data} />
+            <img src={message.data} width="300px" />
           ) : (
             <span>{message.data}</span>
           )}

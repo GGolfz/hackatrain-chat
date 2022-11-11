@@ -1,6 +1,6 @@
 import { Icon, IconButton, TextField } from "@mui/material";
 import axios from "axios";
-import { useState } from "react";
+import { EventHandler, KeyboardEventHandler, useState } from "react";
 import styles from "../styles/ChatRoom.module.css";
 import MessageData from "../type/MessageData";
 import MessageBubble from "./MessageBubble";
@@ -47,6 +47,7 @@ const ChatRoom = ({ callback, roomId, userId, messageList }: Props) => {
           fullWidth
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => (e.key == "Enter" ? handleSendMessage() : () => {})}
         ></TextField>
         <IconButton onClick={handleSendMessage}>
           <Icon>send</Icon>

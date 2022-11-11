@@ -1,7 +1,5 @@
 import styles from "../styles/RoomTile.module.css";
-import MessageData from "../type/MessageData";
 import Room from "../type/Room";
-import { formatTime } from "../utils/format";
 interface Props {
   room: Room;
   currentRoom: Room | null;
@@ -16,10 +14,14 @@ const RoomTile = ({ room, currentRoom, handleChangeRoom }: Props) => {
         };
       }
     }
-    return {}
+    return {};
   };
   return (
-    <div className={styles.RoomTile} style={getRoomStyle()} onClick={() => handleChangeRoom()}>
+    <div
+      className={styles.RoomTile}
+      style={getRoomStyle()}
+      onClick={() => handleChangeRoom()}
+    >
       <div className={styles.RoomAvatar}></div>
       <div className={styles.RoomDetail}>
         <div>{room.name}</div>

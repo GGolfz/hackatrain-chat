@@ -1,0 +1,3 @@
+const uploadPath = ''
+
+export { uploadPath }

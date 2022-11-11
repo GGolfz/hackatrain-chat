@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import UserData from "../type/UserData";
 import styles from "../styles/CreateRoomModal.module.css";
-import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 interface Props {
-  fetchRoomList: () => void;
+  callback: (member: Array<string> ) => void;
   showModal: boolean;
   setShowModal: (d: boolean) => void;
 }
@@ -31,7 +30,7 @@ const modalStyle = {
     background: "rgba(33, 33, 33, 0.5)",
   },
 };
-const CreateRoomModal = ({ fetchRoomList, showModal, setShowModal }: Props) => {
+const CreateRoomModal = ({ callback, showModal, setShowModal }: Props) => {
   const [userList, setUserList] = useState<Array<UserData>>([]);
   const [roomName, setRoomName] = useState<string>("");
   const [roomMember, setRoomMember] = useState<Array<UserData>>([]);
@@ -42,12 +41,13 @@ const CreateRoomModal = ({ fetchRoomList, showModal, setShowModal }: Props) => {
   const handleCreateRoom = () => {
     const token = localStorage.getItem("token");
     if (token != null) {
+        const member = roomMember.map((member) => member.id)
       axios
         .post(
           "http://localhost:3000/api/room",
           {
             name: roomName,
-            members: roomMember.map((member) => member.id),
+            members: member,
           },
           {
             headers: {
@@ -56,8 +56,7 @@ const CreateRoomModal = ({ fetchRoomList, showModal, setShowModal }: Props) => {
           }
         )
         .then((res) => {
-            fetchRoomList();
-            setShowModal(false);
+            callback(member);
         });
     }
   };

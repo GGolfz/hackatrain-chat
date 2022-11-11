@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import socketIOClient from "socket.io-client";
+import socketIOClient, { Socket } from "socket.io-client";
 import "./App.css";
 import LoginScreen from "./components/LoginScreen";
 import RoomTile from "./components/RoomTile";
@@ -12,13 +12,20 @@ import CreateRoomModal from "./components/CreateRoomModal";
 import { Button, IconButton, TextField } from "@mui/material";
 import Icon from "@mui/material/Icon";
 
-let socket;
+let socket: Socket;
 function App() {
   const [user, setUser] = useState<UserData | null>(null);
   const [roomList, setRoomList] = useState<Array<Room>>([]);
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [searchVal, setSearch] = useState("");
+
+  useEffect(() => {
+    socket = socketIOClient("http://localhost:5050");
+    socket.on("roomCreated", (member) => {
+      handleRoomCreatedNotified(member.member)
+    });
+  }, []);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -39,6 +46,25 @@ function App() {
       }
     }
   }, [roomList]);
+
+  const handleRoomCreatedNotified = (member: Array<string>) => {
+    if (user) {
+      const userId = user.id;
+      if (member.includes(userId)) {
+        fetchRoomList();
+      }
+    }
+  };
+
+  const handleCreateRoom = (member: Array<string>) => {
+    if (socket) {
+      socket.emit("roomCreated", {
+        member: member,
+      });
+    }
+    fetchRoomList();
+    setShowModal(false);
+  };
 
   const fetchRoomList = () => {
     const token = localStorage.getItem("token");
@@ -83,10 +109,6 @@ function App() {
       });
   };
 
-  useEffect(() => {
-    socket = socketIOClient("http://localhost:5050");
-  }, []);
-
   return (
     <div className="App">
       {user ? (
@@ -95,7 +117,7 @@ function App() {
             <CreateRoomModal
               setShowModal={setShowModal}
               showModal={showModal}
-              fetchRoomList={fetchRoomList}
+              callback={handleCreateRoom}
             />
           ) : null}
           <div className="leftPanel">

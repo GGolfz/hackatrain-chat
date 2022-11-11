@@ -2,7 +2,9 @@ interface JoinRoomData {
     roomId: string;
     userId: string;
 }
-
+interface RoomCreateData {
+    member: Array<string>;
+}
 interface MessageData {
     roomId: string;
     senderId: string;
@@ -12,11 +14,13 @@ interface MessageData {
 }
 interface ServerToClientEvents {
     message: (data: MessageData) => void;
+    roomCreated: (data: RoomCreateData) => void;
 }
 
 interface ClientToServerEvents {
     joinRoom: (data: JoinRoomData) => void;
     chatMessage: (data: MessageData) => void;
+    roomCreated: (data: RoomCreateData) => void;
 }
 
 interface InterServerEvents {
@@ -28,4 +32,4 @@ interface SocketData {
 }
 
 
-export { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData, JoinRoomData, MessageData };
+export { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData, JoinRoomData, MessageData, RoomCreateData };

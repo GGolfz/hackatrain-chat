@@ -1,6 +1,6 @@
 import { app } from './app'
 import { Server } from 'socket.io'
-import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData, JoinRoomData, MessageData } from './type'
+import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData, JoinRoomData, MessageData, RoomCreateData } from './type'
 import { createServer } from 'http'
 
 const PORT = 5050
@@ -34,6 +34,10 @@ io.on('connection', socket => {
             timestamp } = data
         io.to(roomId).emit('message', { roomId, senderId, sender, message, timestamp });
     });
+
+    socket.on('roomCreated', (data: RoomCreateData) => {
+        io.emit('roomCreated', data)
+    })
 
 
     socket.on('disconnect', () => {

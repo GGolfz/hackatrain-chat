@@ -4,7 +4,7 @@ import { CreateRoomDto } from "./dto/create-room.dto";
 
 @Injectable()
 export class RoomService {
-    constructor(private prismaService: PrismaService) {}
+    constructor(private prismaService: PrismaService) { }
     async createRoom(data: CreateRoomDto): Promise<any> {
         const room = await this.prismaService.room.create({
             data: {
@@ -21,14 +21,19 @@ export class RoomService {
     }
 
     async getRoomList(userId: string): Promise<any> {
-        return this.prismaService.room.findMany({
+        const roomList = await this.prismaService.user_room.findMany({
             include: {
-                user_room: {
-                    where: {
-                        user_id: userId,
+                room: {
+                    select: {
+                        id: true,
+                        name: true
                     }
-                },
+                }
+            },
+            where: {
+                user_id: userId,
             }
         })
+        return roomList.map(r => r.room)
     }
 }

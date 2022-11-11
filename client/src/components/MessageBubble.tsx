@@ -11,7 +11,7 @@ const MessageBubble = ({ userId, message }: Props) => {
       <div className={styles.MyMessageContainer}>
         <div className={styles.MyMessageBubble}>
           {message.type == "image" ? (
-            <img src={`http://localhost:3000/api/chat/image/${message.data}`} width="300px"/>
+            <img src={`http://localhost:3000/api/chat/image/${message.data}`}/>
           ) : (
             <span>{message.data}</span>
           )}
@@ -25,7 +25,7 @@ const MessageBubble = ({ userId, message }: Props) => {
         <div>{message.sender}</div>
         <div className={styles.OtherMessageBubble}>
           {message.type == "image" ? (
-            <img src={`http://localhost:3000/api/chat/image/${message.data}`} width="300px"/>
+            <img src={`http://localhost:3000/api/chat/image/${message.data}`}/>
           ) : (
             <span>{message.data}</span>
           )}

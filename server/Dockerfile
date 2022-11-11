@@ -8,9 +8,6 @@ RUN yarn
 
 RUN mkdir ./prisma
 
-RUN mkdir ./uploads
-RUN mkdir ./uploads/images
-
 COPY ./prisma/schema.prisma ./prisma/
 
 RUN npx prisma generate
@@ -27,5 +24,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
 
+RUN mkdir /app/uploads
+RUN mkdir /app/uploads/images
 EXPOSE 3000
 CMD ["node", "dist/main"]

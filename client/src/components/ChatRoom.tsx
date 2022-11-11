@@ -12,7 +12,13 @@ interface Props {
   userId: string;
   setCurrentRoom: (room: Room | null) => void;
 }
-const ChatRoom = ({ callback, room, userId, messageList, setCurrentRoom }: Props) => {
+const ChatRoom = ({
+  callback,
+  room,
+  userId,
+  messageList,
+  setCurrentRoom,
+}: Props) => {
   const [message, setMessage] = useState("");
   const handleUploadFile = () => {
     document.getElementById("fileInput")?.click();
@@ -20,18 +26,59 @@ const ChatRoom = ({ callback, room, userId, messageList, setCurrentRoom }: Props
   const handleSendImage = (file: File) => {
     const token = localStorage.getItem("token");
     if (token) {
-      const formData = new FormData();
-      formData.append("image", file);
-      axios
-        .post(`http://localhost:3000/api/chat/${room.id}/image`, formData, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        })
-        .then((res) => {
-          callback(res.data);
-          setMessage("");
-        });
+      // if file is svg, convert to png file
+      const fileName = file.name;
+      const fileExtension = fileName.split(".").pop();
+      if (fileExtension === "svg") {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const svg = e.target?.result;
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const img = new Image();
+          img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx?.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+              const newFile = new File([blob as Blob], fileName, {
+                type: "image/png",
+              });
+              const formData = new FormData();
+              formData.append("image", newFile);
+              axios
+                .post(
+                  `http://localhost:3000/api/chat/${room.id}/image`,
+                  formData,
+                  {
+                    headers: {
+                      Authorization: "Bearer " + token,
+                    },
+                  }
+                )
+                .then((res) => {
+                  callback(res.data);
+                  setMessage("");
+                });
+            });
+          };
+          img.src = svg as string;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        const formData = new FormData();
+        formData.append("image", file);
+        axios
+          .post(`http://localhost:3000/api/chat/${room.id}/image`, formData, {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          })
+          .then((res) => {
+            callback(res.data);
+            setMessage("");
+          });
+      }
     }
   };
   const handleSendMessage = () => {

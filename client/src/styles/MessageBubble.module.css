@@ -8,6 +8,9 @@
   background: #fb9ccb;
   border-radius: 1rem 0 0 1rem;
 }
+.MyMessageBubble img, .OtherMessageBubble img{
+  max-width: 300px;
+}
 .OtherMessageContainer {
   display: flex;
   flex-direction: column;

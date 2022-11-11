@@ -5,6 +5,8 @@ services:
     build:
       context: db
       dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=notreallysimplepassword
     networks:
@@ -16,6 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    depends_on:
+      - postgres
     networks:
       - hackatrain-network
     environment:
@@ -26,18 +30,22 @@ services:
     build:
       context: server
       dockerfile: Dockerfile
+    depends_on:
+      - postgres
     ports:
       - "3000:3000"
     networks:
       - hackatrain-network
     environment:
-      - DB_URL=postgresql://postgres:notreallysimplepassword@localhost:5432/postgres
+      - DB_URL=postgresql://postgres:notreallysimplepassword@postgres:5432/postgres
       - JWT_SECRET=thehardestsecret
   socket:
     image: hackatrain_socket
     build:
       context: socket
       dockerfile: Dockerfile
+    depends_on:
+      - postgres
     ports:
       - "5050:5050"
     networks:

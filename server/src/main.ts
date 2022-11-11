@@ -8,7 +8,7 @@ async function bootstrap() {
 	app.enableCors({
 		allowedHeaders: ['Authorization', 'Content-Type'],
 		methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
-		origin: ['http://localhost:5173'],
+		origin: ['http://localhost:5173', 'http://localhost'],
 	})
   const config = new DocumentBuilder()
     .setTitle('API')

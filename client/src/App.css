@@ -1,0 +1,20 @@
+.App {
+  display: flex;
+  flex-direction: row; 
+  width: 100vw;
+  height: 100vh;
+}
+
+.roomList {
+  width: 25vw;
+  height: 100vh;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ccc;
+}
+.roomListTitle {
+  font-size: 2rem;
+  padding: 2rem 1rem;
+  border-bottom: 1px solid #ccc;
+}

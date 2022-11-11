@@ -1,16 +1,16 @@
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy, ExtractJwt } from 'passport-jwt';
+import * as express from 'express';
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
-		super({
-			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			ignoreExpiration: false,
-			secretOrKey: process.env.JWT_SECRET,
-		})
-	}
+        super({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: process.env.JWT_SECRET,
+        })
+    }
 
-	async validate(payload: any) {
-        console.log(payload)
-		return { user_id: payload.id };
-	}
+    async validate(payload: any) {
+        return { user_id: payload.id };
+    }
 }

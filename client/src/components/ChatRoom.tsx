@@ -3,12 +3,14 @@ import axios from "axios";
 import { useState } from "react";
 import styles from "../styles/ChatRoom.module.css";
 import MessageData from "../type/MessageData";
+import MessageBubble from "./MessageBubble";
 interface Props {
   callback: (message: MessageData) => void;
   messageList: Array<MessageData>;
   roomId: string;
+  userId: string;
 }
-const ChatRoom = ({ callback, roomId, messageList }: Props) => {
+const ChatRoom = ({ callback, roomId, userId, messageList }: Props) => {
   const [message, setMessage] = useState("");
 
   const handleSendMessage = () => {
@@ -37,7 +39,7 @@ const ChatRoom = ({ callback, roomId, messageList }: Props) => {
     <div className={styles.ChatRoom}>
       <div className={styles.MessageList}>
         {messageList.map((msg) => (
-          <div>{msg.data}</div>
+          <MessageBubble userId={userId} message={msg} />
         ))}
       </div>
       <div className={styles.MessageField}>

@@ -1,11 +1,12 @@
 .MessageList {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 60px - 2rem);
   display: flex;
   flex-direction: column;
+  padding: 1rem;
 }
 
 .MessageField {
-    display: flex;
-    gap: .5rem;
-    padding: 0 .25rem;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 0.25rem;
 }

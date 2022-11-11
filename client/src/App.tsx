@@ -46,6 +46,10 @@ function App() {
   useEffect(() => {
     if (user) {
       fetchRoomList();
+      socket.off("roomCreated");
+      socket.on("roomCreated", (member) => {
+        handleRoomCreatedNotified(member.member);
+      });
     }
   }, [user]);
 
@@ -226,6 +230,7 @@ function App() {
             {currentRoom ? (
               <ChatRoom
                 messageList={messageList}
+                userId={user.id}
                 roomId={currentRoom.id}
                 callback={handleSendMessage}
               />

@@ -1,23 +1,13 @@
 import styles from "../styles/RoomTile.module.css";
 import MessageData from "../type/MessageData";
 import Room from "../type/Room";
+import { formatTime } from "../utils/format";
 interface Props {
   room: Room;
   currentRoom: Room | null;
   handleChangeRoom: () => void;
 }
 const RoomTile = ({ room, currentRoom, handleChangeRoom }: Props) => {
-  const formatTime = (time: string) => {
-    const date = new Date(time);
-    return date.getHours() + ":" + date.getMinutes();
-  };
-  const renderMessage = (msg: MessageData) => {
-    if (msg.type == "text") {
-      return `${msg.sender}: ${msg.data}`;
-    } else if (msg.type == "image") {
-      return `${msg.sender} send an image`;
-    }
-  };
   const getRoomStyle = () => {
     if (currentRoom != null) {
       if (room.id == currentRoom.id) {
@@ -33,12 +23,6 @@ const RoomTile = ({ room, currentRoom, handleChangeRoom }: Props) => {
       <div className={styles.RoomAvatar}></div>
       <div className={styles.RoomDetail}>
         <div>{room.name}</div>
-        {room.latestMessage ? (
-          <div>
-            {renderMessage(room.latestMessage)} ·{" "}
-            {formatTime(room.latestMessage.timestamp)}
-          </div>
-        ) : null}
       </div>
     </div>
   );

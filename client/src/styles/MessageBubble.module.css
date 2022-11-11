@@ -1,3 +1,21 @@
-.MessageBubble {
-    
+.MyMessageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.MyMessageBubble {
+  padding: 1rem;
+  background: #fb9ccb;
+  border-radius: 1rem 0 0 1rem;
+}
+.OtherMessageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.OtherMessageBubble {
+  padding: 1rem;
+  background: #eee;
+  border-radius: 0 1rem 1rem 0;
 }

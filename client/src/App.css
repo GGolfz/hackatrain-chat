@@ -6,9 +6,8 @@
 }
 
 .roomList {
-  width: 25vw;
   height: 100vh;
-  max-width: 300px;
+  width: 400px;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ccc;

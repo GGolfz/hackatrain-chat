@@ -2,7 +2,8 @@ interface MessageData {
     roomId: string;
     senderId: string;
     sender: string;
-    message: string;
+    data: string;
+    type: string;
     timestamp: string;
 }
 

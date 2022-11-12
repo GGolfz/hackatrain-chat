@@ -12,7 +12,7 @@ const io = new Server<
     SocketData
 >(httpServer, {
     cors: {
-        origin: ["http://localhost:5173","http://localhost"],
+        origin: ['*','http://20.187.74.108',"http://localhost:5173","http://localhost"],
         methods: ["GET"]
     }
 });

@@ -55,7 +55,7 @@ function App() {
   useEffect(() => {
     if (currentRoom == null) {
       if (roomList.length > 0) {
-        if (window.screen.width > 1000) {
+        if (window.innerWidth > 1000) {
           setCurrentRoom(roomList[0]);
         }
       }
@@ -183,7 +183,7 @@ function App() {
 
   const shouldRenderLeftPanel = () => {
     if (currentRoom != null) {
-      if (window.screen.width < 1000) {
+      if (window.innerWidth < 1000) {
         return false;
       }
     }
@@ -194,7 +194,7 @@ function App() {
     if (currentRoom != null) {
       return true;
     } else {
-      if(window.screen.width < 1000) {
+      if(window.innerWidth < 1000) {
         return false;
       }
     }

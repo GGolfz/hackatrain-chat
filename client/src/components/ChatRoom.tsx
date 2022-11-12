@@ -104,7 +104,7 @@ const ChatRoom = ({
   };
 
   const renderBackButton = () => {
-    if (window.screen.width < 1000) {
+    if (window.innerWidth < 1000) {
       return (
         <IconButton onClick={() => setCurrentRoom(null)}>
           <Icon>chevron_left</Icon>
